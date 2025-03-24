@@ -107,31 +107,36 @@
                                         <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin" width="50"></td>
+                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}"
+                                                        alt="Tolak Angin" width="50"></td>
                                                 <td>Tolak Angin</td>
                                                 <td>Rp. 10.000</td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin" width="50"></td>
+                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}"
+                                                        alt="Tolak Angin" width="50"></td>
                                                 <td>Tolak Angin</td>
                                                 <td>Rp. 10.000</td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
-                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin" width="50"></td>
+                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}"
+                                                        alt="Tolak Angin" width="50"></td>
                                                 <td>Tolak Angin</td>
                                                 <td>Rp. 10.000</td>
                                             </tr>
                                             <tr>
                                                 <td>4</td>
-                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin" width="50"></td>
+                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}"
+                                                        alt="Tolak Angin" width="50"></td>
                                                 <td>Tolak Angin</td>
                                                 <td>Rp. 10.000</td>
                                             </tr>
                                             <tr>
                                                 <td>5</td>
-                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin" width="50"></td>
+                                                <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}"
+                                                        alt="Tolak Angin" width="50"></td>
                                                 <td>Tolak Angin</td>
                                                 <td>Rp. 10.000</td>
                                             </tr>

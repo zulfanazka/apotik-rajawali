@@ -6,9 +6,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 
 Route::get("/", [LoginController::class, 'login'])->name('login');
-Route::post('loginaction', [LoginController::class,'loginaction'])->name('loginaction');
+Route::post('loginaction', [LoginController::class, 'loginaction'])->name('loginaction');
 Route::get("home", [HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::post('logoutaction', [LoginController::class,'logoutaction'])->name('logoutaction')->middleware('auth');
+Route::post('logoutaction', [LoginController::class, 'logoutaction'])->name('logoutaction')->middleware('auth');
 
 // Route::get('/dashboard', [DashboardController::class, 'index']);
 
