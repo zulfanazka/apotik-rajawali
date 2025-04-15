@@ -18,4 +18,5 @@ Route::get('inventory/stokbarang', [InventoryController::class, 'stokbarang'])->
 Route::get('inventory/barangmasuk', [InventoryController::class, 'barangmasuk'])->name('barangmasuk');
 Route::get('inventory/barangkeluar', [InventoryController::class, 'barangkeluar'])->name('barangkeluar');
 Route::get('inventory/editbarang', [InventoryController::class, 'editbarang'])->name('editbarang');
+Route::post('inventory/simpanbarang', [InventoryController::class, 'simpanbarang'])->name('simpanbarang');
 
