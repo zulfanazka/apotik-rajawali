@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    public function stokbarang()
+    public function stokbarang(Request $request)
     {
-        return view("inventory.stokbarang");
+        $query = Inventory::query();
+
+    if ($request->has('search') && $request->search != '') {
+        $query->where('nama_barang', 'like', '%' . $request->search . '%')
+              ->orWhere('id_barang', 'like', '%' . $request->search . '%');
+    }
+
+    $items = $query->orderBy('nama_barang', 'asc')->paginate(10);
+    return view("inventory.stokbarang", compact('items'));
     }
     // public function barangmasuk()
     // {
