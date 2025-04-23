@@ -2,69 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory;
 use Illuminate\Http\Request;
+use App\Models\Inventory;
 
 class InventoryController extends Controller
 {
-    public function stokbarang()
+    // Menampilkan halaman stokbarang
+    public function stokBarang()
     {
         return view("inventory.stokbarang");
     }
-    // public function barangmasuk()
-    // {
-    //     return view("inventory.barangmasuk");
-    // }
 
-    public function barangmasuk()
-{
-    // Ambil data dari tabel Inventory
-    $barang = Inventory::all(); // Anda bisa mengganti dengan query sesuai kebutuhan jika perlu filter
-
-    // Kirim data ke view barangmasuk
-    return view('inventory.barangmasuk', compact('barang'));
-}
-
-
-    public function simpanbarang(Request $request)
+    // Menampilkan halaman barangmasuk dan mengambil data barang
+    public function barangMasuk()
     {
-        $request->validate([
-            'nama_barang' => 'required|min:3|max:50',
-            'id_barang' => 'required|unique:inventory,id_barang',
-            'kategori' => 'required',
-            'kuantitas' => 'required|numeric|min:1',
-            'penggunaan' => 'nullable|max:255',
-            'efek_samping' => 'nullable|max:255',
-        ], [
-            'nama_barang.required' => 'Nama Barang wajib diisi',
-            'id_barang.required' => 'ID Barang wajib diisi',
-            'id_barang.unique' => 'ID Barang sudah ada',
-            'kategori.required' => 'Kategori wajib dipilih',
-            'kuantitas.required' => 'Kuantitas wajib diisi',
-            'kuantitas.numeric' => 'Kuantitas harus berupa angka',
-        ]);
-
-        // Simpan data ke dalam tabel Inventory
-        $data = [
-            'nama_barang' => $request->input('nama_barang'),
-            'id_barang' => $request->input('id_barang'),
-            'kategori' => $request->input('kategori'),
-            'kuantitas' => $request->input('kuantitas'),
-            'penggunaan' => $request->input('penggunaan'),
-            'efek_samping' => $request->input('efek_samping'),
-        ];
-
-        Inventory::create($data); // Simpan data ke model Inventory
-
-        return redirect()->route('barangmasuk')->with('success', 'Barang berhasil disimpan');
+        $barang = Inventory::all(); // Mengambil semua data dari tabel Inventory
+        return view('inventory.barangmasuk', compact('barang'));
     }
 
-    public function barangkeluar()
+    // Menyimpan data barang baru atau mengupdate data barang yang sudah ada
+    public function simpanBarang(Request $request)
+    {
+        $rules = [
+            'kategori' => 'required',
+            'tanggal' => 'required|date',
+            'nama_barang' => 'required',
+            'harga_barang' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'id_barang' => 'required',
+            'kuantitas' => 'required|numeric',
+        ];
+
+        if (!$request->has('edit')) {
+            // Tambah data: pastikan id_barang unik
+            $rules['id_barang'] .= '|unique:inventory,id_barang';
+        }
+
+        $request->validate($rules);
+
+        if ($request->has('edit')) {
+            // Update data barang yang sudah ada
+            $barang = Inventory::findOrFail($request->edit);
+            $barang->update($request->all());
+            return redirect()->route('barangmasuk')->with('success', 'Data barang berhasil diubah!');
+        } else {
+            // Tambah data barang baru
+            Inventory::create($request->all());
+            return redirect()->route('barangmasuk')->with('success', 'Data barang berhasil ditambahkan!');
+        }
+    }
+
+    // Menampilkan halaman barangkeluar
+    public function barangKeluar()
     {
         return view("inventory.barangkeluar");
     }
-    public function editbarang()
+
+    // Menampilkan form edit barang
+        public function editBarang($id_barang)
     {
-        return view("inventory.editbarang");
+        // Pastikan mengambil satu data barang berdasarkan id_barang
+        $barang = Inventory::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
+
+        if (!$barang) {
+            return redirect()->route('barangmasuk')->with('error', 'Barang tidak ditemukan.');
+        }
+
+        // Mengirimkan data barang ke view
+        return view("inventory.tambahbarang", compact('barang'));
+    }
+
+
+    // Menampilkan halaman tambah barang (form untuk tambah dan update)
+    public function tambahBarang($id_barang = null)
+    {
+        $barang = null;
+
+        if ($id_barang) {
+            // Jika ada ID, kita ambil data barang untuk diupdate
+            $barang = Inventory::find($id_barang);
+            if (!$barang) {
+                return redirect()->route('barangmasuk')->with('error', 'Barang tidak ditemukan.');
+            }
+        }
+
+        return view('inventory.tambahbarang', compact('barang'));
+    }
+
+
+    // Menghapus barang berdasarkan ID
+    public function delete($id)
+    {
+        try {
+            $barang = Inventory::find($id);
+            if ($barang) {
+                $barang->delete();
+                return redirect()->route('barangmasuk')->with('success', 'Barang berhasil dihapus.');
+            } else {
+                return redirect()->route('barangmasuk')->with('error', 'Barang tidak ditemukan.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('barangmasuk')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
