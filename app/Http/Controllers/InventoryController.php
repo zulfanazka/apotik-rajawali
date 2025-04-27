@@ -12,10 +12,14 @@ class InventoryController extends Controller
     {
         $query = Inventory::query();
 
-    if ($request->has('search') && $request->search != '') {
-        $query->where('nama_barang', 'like', '%' . $request->search . '%')
-              ->orWhere('id_barang', 'like', '%' . $request->search . '%');
-    }
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_barang', 'like', '%' . $request->search . '%')
+                  ->orWhere('id_barang', 'like', '%' . $request->search . '%')
+                  ->orWhere('kategori', 'like', '%' . $request->search . '%');
+            });
+        }
+        
 
     $items = $query->orderBy('nama_barang', 'asc')->paginate(10);
     return view("inventory.stokbarang", compact('items'));
@@ -113,4 +117,27 @@ class InventoryController extends Controller
             return redirect()->route('barangmasuk')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+    // Update data barang
+public function updateBarang(Request $request)
+{
+    $validated = $request->validate([
+        'nama_barang' => 'required|string|max:255',
+        'id_barang' => 'required|string|max:50',
+        'kategori' => 'required|string|max:50',
+        'harga_beli' => 'required|numeric',
+        'harga_jual' => 'required|numeric',
+        'satuan' => 'required|string|max:50',
+        'keterangan' => 'nullable|string|max:255',
+    ]);
+
+    $barang = Inventory::find($request->id_barang);
+
+    if ($barang) {
+        $barang->update($validated);
+        return redirect()->route('stokBarang')->with('success', 'Barang berhasil diperbarui');
+    } else {
+        return redirect()->route('stokBarang')->with('error', 'Barang tidak ditemukan');
+    }
+}
+
 }

@@ -38,6 +38,18 @@
             flex: 1 1 auto;
             padding: 0 !important;
         }
+        /* Menambahkan border-radius pada tabel */
+.table-bordered {
+    border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
+    overflow: hidden;   /* Agar sudutnya tetap rapi */
+}
+
+/* Jika ingin menambahkan border-radius pada kontainer wrapper */
+.dataTables_wrapper {
+    border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
+    overflow: hidden;   /* Menjaga agar kontainer tetap terkelola dengan baik */
+}
+
     </style>
     
     <div class="container-fluid">
@@ -50,7 +62,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Rajawali</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Penyimpanan > Stok Barang</li>
+                <li class="breadcrumb-item active" aria-current="page">Inventory > Stok Barang</li>
             </ol>
         </nav>
 
@@ -67,7 +79,7 @@
                 </select>
             </div>
             <div>
-                <a href="{{ route('editbarang') }}" class="btn btn-success">Tambah Barang</a>
+                <a href="{{ route('tambahbarang') }}" class="btn btn-success">Tambah Barang</a>
                 <button type="button" class="btn btn-danger ml-2" onclick="window.print()">Cetak</button>
             </div>
         </div>
@@ -81,57 +93,81 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>ID Barang</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Harga Beli</th>
+                                <th>Harga Jual</th>
+                                <th>Satuan</th>
+                                <th>Keterangan</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($items as $item)
                                 <tr>
-                                    <th>Nama</th>
-                                    <th>Kode</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Tanggal Keluar</th>
-                                    <th>Kategori</th>
-                                    <th>Stok</th>
-                                    <th>Keterangan</th>
+                                    <td>{{ $item->nama_barang }}</td>
+                                    <td>{{ $item->id_barang }}</td>
+                                    <td>{{ $item->kategori }}</td>
+                                    <td>{{ $item->kuantitas }}</td>
+                                    <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                                    <td>{{ $item->satuan }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                    <td>
+                                        <!-- Tombol untuk membuka modal dengan data item -->
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal-{{ $item->id_barang }}">
+                                            Detail
+                                        </button>
+                                    
+                                        <!-- Modal untuk setiap barang -->
+                                        <div class="modal fade" id="exampleModal-{{ $item->id_barang }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Detail Barang: {{ $item->nama_barang }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Tabel di dalam Modal untuk menampilkan detail item -->
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tanggal Masuk</th>
+                                                                    <th>Tanggal Keluar</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>{{ $item->tanggal_masuk }}</td>
+                                                                    <td>{{ $item->tanggal_keluar }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- Tombol di dalam Modal -->
+                                                        <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}" class="btn btn-success">Edit</a>
+                                                        <a href="{{ route('deletebarang', ['id' => $item->id_barang]) }}" class="btn btn-danger">Hapus</a>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($items as $item)
-                                    <tr>
-                                        <td>{{ $item->nama_barang }}</td>
-                                        <td>{{ $item->tanggal_masuk }}</td>
-                                        <td>{{ $item->tanggal_keluar }}</td>
-                                        <td>{{ $item->kategori }}</td>
-                                        <td>{{ $item->kuantitas }}</td>
-                                        <td>{{ $item->keterangan }}</td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                            @endforeach
+                        </tbody>
+                        
                             
                     </table>
                 </div>
-
-                <!-- Modal Konfirmasi Hapus -->
-                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Anda yakin ingin menghapus barang?</p>
-                                <label for="verifyId">Masukkan Kode Barang:</label>
-                                <input type="text" id="verifyId" class="form-control" placeholder="Kode Barang" oninput="validateDelete()">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                <button type="button" id="deleteButton" class="btn btn-danger" disabled onclick="confirmDelete()">Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Modal -->
             </div>
         </div>
     </div>

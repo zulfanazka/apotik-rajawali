@@ -5,7 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
-
+use App\Models\Inventory;
 
 Route::get("/", [LoginController::class, 'login'])->name('login');
 Route::post('loginaction', [LoginController::class, 'loginaction'])->name('loginaction');
@@ -30,3 +30,5 @@ Route::post('inventory/simpanbarang', [InventoryController::class, 'simpanBarang
 
 // Hapus barang
 Route::delete('inventory/{id}', [InventoryController::class, 'delete'])->name('deletebarang');
+
+Route::post('/update-barang', [InventoryController::class, 'updateBarang'])->name('updateBarang');
