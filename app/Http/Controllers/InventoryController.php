@@ -20,7 +20,7 @@ class InventoryController extends Controller
                   ->orWhere('kategori', 'like', '%' . $request->search . '%');
             });
         }
-        
+
 
     $items = $query->orderBy('nama_barang', 'asc')->paginate(10);
     return view("inventory.stokbarang", compact('items'));
@@ -110,7 +110,7 @@ class InventoryController extends Controller
         public function editBarang($id_barang)
     {
         // Pastikan mengambil satu data barang berdasarkan id_barang
-        $barang = BarangKeluar::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
+        $barang = Inventory::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
 
         if (!$barang) {
             return redirect()->route('barangmasuk')->with('error', 'Barang tidak ditemukan.');
@@ -166,7 +166,7 @@ class InventoryController extends Controller
         try {
             // Cari dari model BarangKeluar
             $barang = BarangKeluar::where('id_barang', $id)->first();
-    
+
             if ($barang) {
                 $barang->delete();
                 return redirect()->route('barangkeluar')->with('success', 'Barang keluar berhasil dihapus.');
@@ -177,9 +177,9 @@ class InventoryController extends Controller
             return redirect()->route('barangkeluar')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    
 
-    
+
+
 
 
     // Update data barang
