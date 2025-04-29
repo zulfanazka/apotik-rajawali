@@ -16,14 +16,14 @@ class InventoryController extends Controller
         if ($request->has('search') && $request->search != '') {
             $query->where(function ($q) use ($request) {
                 $q->where('nama_barang', 'like', '%' . $request->search . '%')
-                  ->orWhere('id_barang', 'like', '%' . $request->search . '%')
-                  ->orWhere('kategori', 'like', '%' . $request->search . '%');
+                    ->orWhere('id_barang', 'like', '%' . $request->search . '%')
+                    ->orWhere('kategori', 'like', '%' . $request->search . '%');
             });
         }
 
 
-    $items = $query->orderBy('nama_barang', 'asc')->paginate(10);
-    return view("inventory.stokbarang", compact('items'));
+        $items = $query->orderBy('nama_barang', 'asc')->paginate(10);
+        return view("inventory.stokbarang", compact('items'));
     }
 
     // Menampilkan halaman barangmasuk dan mengambil data barang
@@ -66,36 +66,58 @@ class InventoryController extends Controller
     }
 
     public function simpanBarangKeluar(Request $request)
-{
-    // Validasi input data
-    $rules = [
-        'kategori' => 'required',
-        'tanggal_keluar' => 'required|date', // <<< ubah ini
-        'nama_barang' => 'required',
-        'harga_jual' => 'required|numeric',
-        'id_barang' => 'required',
-        'kuantitas' => 'required|numeric',
-    ];
+    {
+        // Validasi input data
+        $rules = [
+            'kategori' => 'required',
+            'tanggal_keluar' => 'required|date',
+            'nama_barang' => 'required',
+            'harga_jual' => 'required|numeric',
+            'id_barang' => 'required',
+            'kuantitas' => 'required|numeric',
+        ];
 
-    // Jika tidak ada edit, pastikan id_barang unik
-    if (!$request->has('edit')) {
-        $rules['id_barang'] .= '|unique:barang_keluar,id_barang';
+        // Jika sedang menambah data (bukan edit), pastikan ID barang unik di tabel barangkeluar
+        if (!$request->has('edit')) {
+            $rules['id_barang'] .= '|unique:barangkeluar,id_barang';
+        }
+
+        // Validasi request
+        $validated = $request->validate($rules);
+
+        if ($request->has('edit')) {
+            // MODE EDIT: Update barang keluar berdasarkan id_barang
+            $barang = BarangKeluar::where('id_barang', $request->edit)->firstOrFail();
+
+            $barang->update([
+                'kategori' => $request->kategori,
+                'tanggal_keluar' => $request->tanggal_keluar,
+                'nama_barang' => $request->nama_barang,
+                'harga_jual' => $request->harga_jual,
+                'id_barang' => $request->id_barang,
+                'kuantitas' => $request->kuantitas,
+                'detail_obat' => $request->detail_obat,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            return redirect()->route('barangkeluar')->with('success', 'Data barang keluar berhasil diubah!');
+        } else {
+            // MODE TAMBAH: Tambahkan data baru ke tabel barangkeluar
+            BarangKeluar::create([
+                'kategori' => $request->kategori,
+                'tanggal_keluar' => $request->tanggal_keluar,
+                'nama_barang' => $request->nama_barang,
+                'harga_jual' => $request->harga_jual,
+                'id_barang' => $request->id_barang,
+                'kuantitas' => $request->kuantitas,
+                'detail_obat' => $request->detail_obat,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            return redirect()->route('barangkeluar')->with('success', 'Data barang keluar berhasil ditambahkan!');
+        }
     }
 
-    // Validasi data berdasarkan rules
-    $request->validate($rules);
-
-    if ($request->has('edit')) {
-        // Update data barang keluar yang sudah ada
-        $barang = BarangKeluar::findOrFail($request->edit);
-        $barang->update($request->all());
-        return redirect()->route('barangkeluar')->with('success', 'Data barang keluar berhasil diubah!');
-    } else {
-        // Tambah data barang keluar baru
-        BarangKeluar::create($request->all());
-        return redirect()->route('barangkeluar')->with('success', 'Data barang keluar berhasil ditambahkan!');
-    }
-}
 
 
 
@@ -107,7 +129,7 @@ class InventoryController extends Controller
     }
 
     // Menampilkan form edit barang
-        public function editBarang($id_barang)
+    public function editBarang($id_barang)
     {
         // Pastikan mengambil satu data barang berdasarkan id_barang
         $barang = Inventory::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
@@ -159,6 +181,19 @@ class InventoryController extends Controller
         }
     }
 
+    public function editBarangKeluar($id_barang)
+    {
+        // Pastikan mengambil satu data barang berdasarkan id_barang
+        $barang = Inventory::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
+
+        if (!$barang) {
+            return redirect()->route('barangkeluar')->with('error', 'Barang tidak ditemukan.');
+        }
+
+        // Mengirimkan data barang ke view
+        return view("inventory.tambahbarangkeluar", compact('barang'));
+    }
+
     // Menghapus barang keluar berdasarkan ID
 
     public function deleteBarangKeluar($id)
@@ -183,63 +218,63 @@ class InventoryController extends Controller
 
 
     // Update data barang
-public function updateBarang(Request $request)
-{
-    $validated = $request->validate([
-        'nama_barang' => 'required|string|max:255',
-        'id_barang' => 'required|string|max:50',
-        'kategori' => 'required|string|max:50',
-        'harga_beli' => 'required|numeric',
-        'harga_jual' => 'required|numeric',
-        'satuan' => 'required|string|max:50',
-        'keterangan' => 'nullable|string|max:255',
-    ]);
-
-    $barang = Inventory::find($request->id_barang);
-
-    if ($barang) {
-        $barang->update($validated);
-        return redirect()->route('stokBarang')->with('success', 'Barang berhasil diperbarui');
-    } else {
-        return redirect()->route('stokBarang')->with('error', 'Barang tidak ditemukan');
-    }
-}
-
-public function updateBarangKeluar(Request $request)
-{
-    // Validasi input dari form
-    $validated = $request->validate([
-        'nama_barang' => 'required|string|max:255',
-        'id_barang' => 'required|string|max:50',
-        'kategori' => 'required|string|max:50',
-        'harga_jual' => 'required|numeric',
-        'kuantitas' => 'required|numeric',
-        'detail_obat' => 'nullable|string|max:255',
-        'keterangan' => 'nullable|string|max:255',
-        'tanggal_keluar' => 'required|date',
-    ]);
-
-    // Cari barang keluar berdasarkan ID
-    $barang = BarangKeluar::find($request->id_barang);
-
-    // Jika barang keluar ditemukan, lakukan update
-    if ($barang) {
-        $barang->update([
-            'nama_barang' => $validated['nama_barang'],
-            'id_barang' => $validated['id_barang'],
-            'kategori' => $validated['kategori'],
-            'harga_jual' => $validated['harga_jual'],
-            'kuantitas' => $validated['kuantitas'],
-            'detail_obat' => $validated['detail_obat'],
-            'keterangan' => $validated['keterangan'],
-            'tanggal_keluar' => $validated['tanggal_keluar'],
+    public function updateBarang(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            'id_barang' => 'required|string|max:50',
+            'kategori' => 'required|string|max:50',
+            'harga_beli' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'satuan' => 'required|string|max:50',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
-        return redirect()->route('barangkeluar')->with('success', 'Barang keluar berhasil diperbarui.');
-    } else {
-        return redirect()->route('barangkeluar')->with('error', 'Barang keluar tidak ditemukan.');
+        $barang = Inventory::find($request->id_barang);
+
+        if ($barang) {
+            $barang->update($validated);
+            return redirect()->route('stokBarang')->with('success', 'Barang berhasil diperbarui');
+        } else {
+            return redirect()->route('stokBarang')->with('error', 'Barang tidak ditemukan');
+        }
     }
-}
+
+    public function updateBarangKeluar(Request $request)
+    {
+        // Validasi input dari form
+        $validated = $request->validate([
+            'nama_barang' => 'required|string|max:255',
+            'id_barang' => 'required|string|max:50',
+            'kategori' => 'required|string|max:50',
+            'harga_jual' => 'required|numeric',
+            'kuantitas' => 'required|numeric',
+            'detail_obat' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string|max:255',
+            'tanggal_keluar' => 'required|date',
+        ]);
+
+        // Cari barang keluar berdasarkan ID
+        $barang = BarangKeluar::find($request->id_barang);
+
+        // Jika barang keluar ditemukan, lakukan update
+        if ($barang) {
+            $barang->update([
+                'nama_barang' => $validated['nama_barang'],
+                'id_barang' => $validated['id_barang'],
+                'kategori' => $validated['kategori'],
+                'harga_jual' => $validated['harga_jual'],
+                'kuantitas' => $validated['kuantitas'],
+                'detail_obat' => $validated['detail_obat'],
+                'keterangan' => $validated['keterangan'],
+                'tanggal_keluar' => $validated['tanggal_keluar'],
+            ]);
+
+            return redirect()->route('barangkeluar')->with('success', 'Barang keluar berhasil diperbarui.');
+        } else {
+            return redirect()->route('barangkeluar')->with('error', 'Barang keluar tidak ditemukan.');
+        }
+    }
 
 
 }
