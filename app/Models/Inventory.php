@@ -13,6 +13,8 @@ class Inventory extends Model
     protected $primaryKey = 'id_barang'; // INI PENTING
 
     public $timestamps = false; // kalau kamu gak pakai created_at dan updated_at
+    public $incrementing = false; // ← ini penting
+    protected $keyType = 'string'; // ← sesuaikan jika id_barang berupa string
 
     protected $fillable = [
         'kategori', 'tanggal', 'nama_barang',

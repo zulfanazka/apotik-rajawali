@@ -79,7 +79,7 @@ class InventoryController extends Controller
 
         // Jika sedang menambah data (bukan edit), pastikan ID barang unik di tabel barangkeluar
         if (!$request->has('edit')) {
-            $rules['id_barang'] .= '|unique:barangkeluar,id_barang';
+            $rules['id_barang'] .= '|unique:barang_keluar,id_barang';
         }
 
         // Validasi request
@@ -184,7 +184,7 @@ class InventoryController extends Controller
     public function editBarangKeluar($id_barang)
     {
         // Pastikan mengambil satu data barang berdasarkan id_barang
-        $barang = Inventory::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
+        $barang = BarangKeluar::find($id_barang);  // Mengambil satu barang berdasarkan id_barang
 
         if (!$barang) {
             return redirect()->route('barangkeluar')->with('error', 'Barang tidak ditemukan.');
