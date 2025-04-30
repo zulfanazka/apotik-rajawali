@@ -17,10 +17,15 @@ class Inventory extends Model
     protected $keyType = 'string'; // ← sesuaikan jika id_barang berupa string
 
     protected $fillable = [
-        'kategori', 'tanggal', 'nama_barang',
-        'harga_barang', 'harga_jual',
-        'id_barang', 'kuantitas',
-        'detail_obat', 'keterangan'
+        'kategori',
+        'tanggal',
+        'nama_barang',
+        'harga_barang',
+        'harga_jual',
+        'id_barang',
+        'kuantitas',
+        'detail_obat',
+        'keterangan'
     ];
 
 

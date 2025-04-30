@@ -29,9 +29,9 @@
 
         <p class="text-muted">*Semua field wajib diisi kecuali ada keterangan</p>
 
-        <form action="{{ route('simpanbarang')}}" method="POST">
+        <form action="{{ route('simpanbarang') }}" method="POST">
             @csrf
-            @if(isset($barang))
+            @if (isset($barang))
                 <input type="hidden" name="edit" value="{{ $barang->id_barang }}">
             @endif
 
