@@ -17,13 +17,24 @@ class BarangKeluar extends Model
     public $timestamps = false; // ← jika tidak pakai created_at dan updated_at
 
     protected $fillable = [
-        'nama_barang',
         'id_barang',
+        'nama_barang',
         'kategori',
-        'kuantitas',
-        'detail_obat',
-        'harga_jual',
-        'keterangan',
+        'satuan',
+        'tanggal_masuk',
         'tanggal_keluar',
+        'harga_beli',
+        'harga_jual',
+        'stok',
+        'jumlah_keluar',
+        'detail',
+        'keterangan'
     ];
+
+    // Menambahkan relasi ke model Inventory
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class, 'id_barang', 'id_barang');
+    }
 }
+

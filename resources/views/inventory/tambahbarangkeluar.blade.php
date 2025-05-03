@@ -8,54 +8,47 @@
             border-radius: 10px;
             margin: 0px 20px;
         }
-
-        .breadcrumb a {
-            text-decoration: none;
-        }
     </style>
 
     <div class="container">
-        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <a href="{{ route('barangkeluar') }}" class="fw-bold text-dark">Barang Keluar</a>
                 </li>
                 <li class="breadcrumb-item active text-primary" aria-current="page">
-                    <strong>{{ isset($barang) ? 'Edit Barang' : 'Tambah Barang' }}</strong>
+                    <strong>Tambah Barang Keluar</strong>
                 </li>
             </ol>
         </nav>
 
-        <p class="text-muted">*Semua field wajib diisi kecuali ada keterangan</p>
-
         <form action="{{ route('simpanbarangkeluar') }}" method="POST">
             @csrf
-            @if(isset($barang))
-                <input type="hidden" name="edit" value="{{ $barang->id_barang }}">
-            @endif
 
             <div class="row mt-3">
                 <div class="col-md-6 mb-3">
-                    <label for="kategori" class="form-label">Kategori</label>
-                    <select class="form-select" name="kategori" required>
-                        <option hidden>- Pilih Kategori -</option>
-                        @foreach (['Obat', 'Vitamin', 'Antibiotik'] as $kategori)
-                            <option value="{{ $kategori }}"
-                                {{ old('kategori', $barang->kategori ?? '') === $kategori ? 'selected' : '' }}>
-                                {{ $kategori }}
+                    <label for="id_barang" class="form-label">Pilih Barang</label>
+                    <select class="form-select" name="id_barang" id="id_barang" required>
+                        <option hidden>- Pilih Barang -</option>
+                        @foreach ($barangMasuk as $b)
+                            <option value="{{ $b->id_barang }}" data-nama="{{ $b->nama_barang }}"
+                                data-satuan="{{ $b->satuan }}" data-stok="{{ $b->stok }}"
+                                data-harga_beli="{{ $b->harga_beli }}" data-harga_jual="{{ $b->harga_jual }}"
+                                data-tanggal_masuk="{{ $b->tanggal_masuk }}" data-kategori="{{ $b->kategori }}"
+                                {{ old('id_barang') == $b->id_barang ? 'selected' : '' }}>
+                                {{ $b->nama_barang }} ({{ $b->id_barang }})
                             </option>
                         @endforeach
                     </select>
-                    @error('kategori')
+                    @error('id_barang')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="tanggal_keluar">Tanggal Keluar</label>
-                    <input type="date" class="form-control" name="tanggal_keluar"
-                        value="{{ old('tanggal_keluar', $barang->tanggal_keluar ?? now()->format('Y-m-d')) }}" required>
+                    <label for="tanggal_keluar" class="form-label">Tanggal Keluar</label>
+                    <input type="date" name="tanggal_keluar" class="form-control"
+                        value="{{ old('tanggal_keluar', now()->format('Y-m-d')) }}" required>
                     @error('tanggal_keluar')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -65,53 +58,47 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="nama_barang" class="form-label">Nama Barang</label>
-                    <input type="text" class="form-control" name="nama_barang"
-                        value="{{ old('nama_barang', $barang->nama_barang ?? '') }}" required>
-                    @error('nama_barang')
+                    <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="stok" class="form-label">Stok Tersedia</label>
+                    <input type="number" name="stok" id="stok" class="form-control" readonly>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="satuan" class="form-label">Satuan</label>
+                    <input type="text" name="satuan" id="satuan" class="form-control" readonly>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="jumlah_keluar" class="form-label">Jumlah Keluar</label>
+                    <input type="number" name="jumlah_keluar" class="form-control" id="jumlah_keluar"
+                        value="{{ old('jumlah_keluar') }}" required>
+                    @error('jumlah_keluar')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="id_barang" class="form-label">ID Barang</label>
-                    <input type="text" class="form-control" name="id_barang"
-                        value="{{ old('id_barang', $barang->id_barang ?? '') }}" required
-                        {{ isset($barang) ? 'readonly' : '' }}>
-                    @error('id_barang')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="kuantitas" class="form-label">Kuantitas Keluar</label>
-                    <input type="number" class="form-control" name="kuantitas"
-                        value="{{ old('kuantitas', $barang->kuantitas ?? '') }}" required>
-                    @error('kuantitas')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                    <label for="harga_beli" class="form-label">Harga Beli</label>
+                    <input type="number" name="harga_beli" id="harga_beli" class="form-control" readonly>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="harga_jual" class="form-label">Harga Jual</label>
-                    <input type="number" class="form-control" name="harga_jual"
-                        value="{{ old('harga_jual', $barang->harga_jual ?? '') }}" required>
-                    @error('harga_jual')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                    <input type="number" name="harga_jual" id="harga_jual" class="form-control" readonly>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label for="detail_obat" class="form-label">Detail Obat</label>
-                <textarea class="form-control" name="detail_obat" rows="3">{{ old('detail_obat', $barang->detail_obat ?? '') }}</textarea>
-                @error('detail_obat')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <div class="col-md-6 mb-3">
+                    <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
+                    <input type="date" name="tanggal_masuk" id="tanggal_masuk" class="form-control" readonly>
+                </div>
             </div>
 
             <div class="mb-4">
                 <label for="keterangan" class="form-label">Keterangan</label>
-                <textarea class="form-control" name="keterangan" rows="3">{{ old('keterangan', $barang->keterangan ?? '') }}</textarea>
+                <textarea class="form-control" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
                 @error('keterangan')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
@@ -119,8 +106,31 @@
 
             <div class="text-end">
                 <a href="{{ route('barangkeluar') }}" class="btn btn-secondary">Batal</a>
-                <button type="submit" class="btn btn-success">Simpan Barang Keluar</button>
+                <button type="submit" class="btn btn-success">Simpan</button>
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById('id_barang').addEventListener('change', function() {
+            let selected = this.options[this.selectedIndex];
+
+            document.getElementById('nama_barang').value = selected.dataset.nama || '';
+            document.getElementById('stok').value = selected.dataset.stok || '';
+            document.getElementById('satuan').value = selected.dataset.satuan || '';
+            document.getElementById('harga_beli').value = selected.dataset.harga_beli || '';
+            document.getElementById('harga_jual').value = selected.dataset.harga_jual || '';
+            document.getElementById('tanggal_masuk').value = selected.dataset.tanggal_masuk || '';
+        });
+
+        document.getElementById('jumlah_keluar').addEventListener('input', function() {
+            let stok = parseInt(document.getElementById('stok').value) || 0;
+            let jumlah = parseInt(this.value);
+
+            if (jumlah > stok) {
+                alert('Jumlah keluar tidak boleh melebihi stok tersedia!');
+                this.value = stok;
+            }
+        });
+    </script>
 @endsection

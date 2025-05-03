@@ -37,30 +37,32 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Nama Barang</th>
                                     <th>ID Barang</th>
+                                    <th>Nama Barang</th>
                                     <th>Kategori</th>
-                                    <th>Kuantitas</th>
-                                    <th>Detail Obat</th>
-                                    <th>Keterangan</th>
+                                    <th>Satuan</th>
+                                    {{-- <th>Detail Barang</th> --}}
+                                    {{-- <th>Detail Obat</th> --}}
                                     <th>Tanggal Masuk</th>
                                     <th>Harga Beli</th>
                                     <th>Harga Jual</th>
+                                    <th>stok</th>
+                                    <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($barang as $item)
                                     <tr>
-                                        <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->id_barang }}</td>
+                                        <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->kategori }}</td>
-                                        <td>{{ $item->kuantitas }}</td>
-                                        <td>{{ $item->detail_obat }}</td>
-                                        <td>{{ $item->keterangan }}</td>
-                                        <td>{{ $item->tanggal }}</td>
-                                        <td>{{ $item->harga_barang }}</td>
+                                        <td>{{ $item->satuan }}</td>
+                                        <td>{{ $item->tanggal_masuk }}</td>
+                                        <td>{{ $item->harga_beli }}</td>
                                         <td>{{ $item->harga_jual }}</td>
+                                        <td>{{ $item->stok }}</td>
+                                        <td>{{ $item->keterangan }}</td>
                                         <td>
                                             <!-- Tombol Edit -->
                                             <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}"

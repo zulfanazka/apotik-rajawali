@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,15 +12,19 @@ return new class extends Migration
     {
         Schema::create('barang_keluar', function (Blueprint $table) {
             $table->id();
+            $table->string('id_barang')->unique(); // ID Barang, pastikan unik
             $table->string('nama_barang'); // Nama Barang
-            $table->string('id_barang'); // ID Barang, relasi dari barang masuk (tidak perlu unique di sini)
             $table->string('kategori'); // Kategori
-            $table->integer('kuantitas'); // Kuantitas keluar
-            $table->text('detail_obat')->nullable(); // Detail barang (opsional)
-            $table->integer('harga_jual'); // Harga jual per unit saat keluar
-            $table->text('keterangan')->nullable(); // Keterangan tambahan
-            $table->date('tanggal_keluar'); // Tanggal barang keluar
-            $table->timestamps(); // Kolom created_at dan updated_at
+            $table->string('satuan'); // Satuan barang
+            $table->date('tanggal_masuk');
+            $table->date('tanggal_keluar')->nullable()->default(null);
+            $table->integer('harga_beli'); // Efek samping barang
+            $table->integer('harga_jual');
+            $table->integer('stok'); // stok sebagai integer
+            $table->integer('jumlah_keluar')->nullable(); // Menjadikan jumlah_keluar nullable;
+            $table->text('detail_obat')->nullable(); // Penggunaan barang
+            $table->text('keterangan')->nullable();
+            $table->timestamps(); // Kolom waktu pembuatan dan update
         });
     }
 

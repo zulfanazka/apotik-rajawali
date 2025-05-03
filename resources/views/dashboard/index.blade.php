@@ -12,6 +12,7 @@
                     <div class="card-body" id="total_transaksi">
                         <i class="fas fa-money-bill" id="icon-uang"></i>
                         <h3><strong>Total Transaksi</strong></h3>
+                        <h4>Rp {{ number_format($totalTransaksi, 0, ',', '.') }}</h4>
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
                         <a class="small text-white stretched-link" href="#">Lihat Detail Laporan</a>
@@ -21,20 +22,23 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-warning text-white mb-4">
                     <div class="card-body" id="stok_barang">
                         <i class="fa fa-medkit" id="icon-stok-barang"></i>
                         <h3><strong>Stok Barang</strong></h3>
+                        <h4><strong>{{ $totalStokSaatIni }}</strong></h4> <!-- Tambahan ini -->
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
-                        <a class="small text-white stretched-link" href="#">lihat inventaris</a>
+                        <a class="small text-white stretched-link" href="{{ route('stokbarang') }}">lihat inventaris</a>
                         <div class="small text-white">
                             <i class="fas fa-angle-right"></i>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- card inventaris -->
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-danger text-white mb-4">
@@ -48,11 +52,11 @@
                         <div class="card-footer-kanan-home">
                             <a class="small text-white stretched-link">
                                 Barang Masuk<br />
-                                <h4><strong>100</strong></h4>
+                                <h4><strong>{{ $totalMasuk }}</strong></h4>
                             </a>
                             <a class="small text-white stretched-link" id="barang-keluar">
                                 Barang Keluar<br />
-                                <h4><strong>100</strong></h4>
+                                <h4><strong>{{ $totalKeluar }}</strong></h4>
                             </a>
                         </div>
                         <div class="small text-white">
@@ -88,46 +92,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin"
-                                            width="50"></td>
-                                    <td>Tolak Angin</td>
-                                    <td>Rp. 10.000</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin"
-                                            width="50"></td>
-                                    <td>Tolak Angin</td>
-                                    <td>Rp. 10.000</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin"
-                                            width="50"></td>
-                                    <td>Tolak Angin</td>
-                                    <td>Rp. 10.000</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin"
-                                            width="50"></td>
-                                    <td>Tolak Angin</td>
-                                    <td>Rp. 10.000</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td><img src="{{ asset('template/assets/images/tolak angin.jpg') }}" alt="Tolak Angin"
-                                            width="50"></td>
-                                    <td>Tolak Angin</td>
-                                    <td>Rp. 10.000</td>
-                                </tr>
+                                @foreach ($topProduk as $index => $produk)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td><img src="{{ asset('template/assets/images/' . strtolower(str_replace(' ', '_', $produk->nama_barang)) . '.jpg') }}"
+                                                alt="{{ $produk->nama_barang }}" width="50" style="object-fit: cover;">
+                                        </td>
+                                        <td>{{ $produk->nama_barang }}</td>
+                                        <td>Rp. {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 @endsection
