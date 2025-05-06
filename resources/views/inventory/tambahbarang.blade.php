@@ -29,9 +29,9 @@
 
         <p class="text-muted">*Semua field wajib diisi kecuali ada keterangan</p>
 
-        <form action="{{ route('simpanbarang')}}" method="POST">
+        <form action="{{ route('simpanbarang') }}" method="POST">
             @csrf
-            @if(isset($barang))
+            @if (isset($barang))
                 <input type="hidden" name="edit" value="{{ $barang->id_barang }}">
             @endif
 
@@ -53,10 +53,10 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="tanggal">Tanggal Masuk</label>
-                    <input type="date" class="form-control" name="tanggal"
-                        value="{{ old('tanggal', $barang->tanggal ?? now()->format('Y-m-d')) }}" required>
-                    @error('tanggal')
+                    <label for="tanggal_masuk">Tanggal Masuk</label>
+                    <input type="date" class="form-control" name="tanggal_masuk"
+                        value="{{ old('tanggal_masuk', $barang->tanggal_masuk ?? now()->format('Y-m-d')) }}" required>
+                    @error('tanggal_masuk')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
@@ -83,19 +83,28 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="kuantitas" class="form-label">Kuantitas</label>
-                    <input type="number" class="form-control" name="kuantitas"
-                        value="{{ old('kuantitas', $barang->kuantitas ?? '') }}" required>
-                    @error('kuantitas')
+                    <label for="stok" class="form-label">Stok</label>
+                    <input type="number" class="form-control" name="stok"
+                        value="{{ old('stok', $barang->stok ?? '') }}" required>
+                    @error('stok')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="harga_barang" class="form-label">Harga Beli</label>
-                    <input type="number" class="form-control" name="harga_barang"
-                        value="{{ old('harga_barang', $barang->harga_barang ?? '') }}" required>
-                    @error('harga_barang')
+                    <label for="satuan" class="form-label">Satuan</label>
+                    <input type="text" class="form-control" name="satuan"
+                        value="{{ old('satuan', $barang->satuan ?? '') }}" required>
+                    @error('satuan')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="harga_beli" class="form-label">Harga Beli</label>
+                    <input type="number" class="form-control" name="harga_beli"
+                        value="{{ old('harga_beli', $barang->harga_beli ?? '') }}" required>
+                    @error('harga_beli')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
@@ -108,15 +117,33 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
+                {{-- <div class="col-md-6 mb-3">
+                    <label for="tanggal_keluar" class="form-label">Tanggal Keluar</label>
+                    <input type="date" class="form-control" name="tanggal_keluar"
+                        value="{{ old('tanggal_keluar', $barang->tanggal_keluar ?? '') }}">
+                    @error('tanggal_keluar')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div> --}}
+
+                {{-- <div class="col-md-6 mb-3">
+                    <label for="jumlah_keluar" class="form-label">Jumlah Keluar</label>
+                    <input type="number" class="form-control" name="jumlah_keluar"
+                        value="{{ old('jumlah_keluar', $barang->jumlah_keluar ?? 0) }}">
+                    @error('jumlah_keluar')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div> --}}
             </div>
 
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label for="detail_obat" class="form-label">Detail Obat</label>
                 <textarea class="form-control" name="detail_obat" rows="3">{{ old('detail_obat', $barang->detail_obat ?? '') }}</textarea>
                 @error('detail_obat')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
-            </div>
+            </div> --}}
 
             <div class="mb-4">
                 <label for="keterangan" class="form-label">Keterangan</label>

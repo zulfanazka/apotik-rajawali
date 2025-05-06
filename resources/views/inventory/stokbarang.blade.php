@@ -8,23 +8,23 @@
             float: left;
             margin-bottom: 10px;
         }
-
+    
         .dataTables_wrapper .dataTables_filter {
             float: right;
             margin-bottom: 10px;
         }
-
+    
         /* Atur bagian bawah: Info & Pagination */
         .dataTables_wrapper .dataTables_info {
             float: left;
             margin-top: 10px;
         }
-
+    
         .dataTables_wrapper .dataTables_paginate {
             float: right;
             margin-top: 10px;
         }
-
+    
         /* Biar layout lebih clean saat responsive */
         .dataTables_wrapper .row {
             display: flex;
@@ -32,39 +32,38 @@
             align-items: center;
             justify-content: space-between;
         }
-
+    
         .dataTables_wrapper .col-sm-12,
         .dataTables_wrapper .col-sm-6 {
             flex: 1 1 auto;
             padding: 0 !important;
         }
-
         /* Menambahkan border-radius pada tabel */
-        .table-bordered {
-            border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
-            overflow: hidden;   /* Agar sudutnya tetap rapi */
-        }
+.table-bordered {
+    border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
+    overflow: hidden;   /* Agar sudutnya tetap rapi */
+}
 
-        /* Jika ingin menambahkan border-radius pada kontainer wrapper */
-        .dataTables_wrapper {
-            border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
-            overflow: hidden;   /* Menjaga agar kontainer tetap terkelola dengan baik */
-        }
+/* Jika ingin menambahkan border-radius pada kontainer wrapper */
+.dataTables_wrapper {
+    border-radius: 8px; /* Sesuaikan nilai sesuai dengan kebutuhan */
+    overflow: hidden;   /* Menjaga agar kontainer tetap terkelola dengan baik */
+}
+
     </style>
-
+    
     <div class="container-fluid">
         <!-- Judul Halaman -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="mt-4">Stok Barang</h1>
         </div>
 
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Rajawali</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Inventory > Stok Barang</li>
-            </ol>
-        </nav>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Rajawali</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Inventory > Stok Barang</li>
+                </ol>
+            </nav>
 
         <!-- Filter & Tombol -->
         <div class="d-flex justify-content-between mb-3">
@@ -74,6 +73,8 @@
                     <option value="Obat">Obat</option>
                     <option value="Vitamin">Vitamin</option>
                     <option value="Antibiotik">Antibiotik</option>
+                    <option value="Alkes">Alkes</option>
+                    <option value="Suplemen">Suplemen</option>
                 </select>
             </div>
             <div>
@@ -111,7 +112,7 @@
                                     <td>{{ $item->id_barang }}</td>
                                     <td>{{ $item->kategori }}</td>
                                     <td>{{ $item->kuantitas }}</td>
-                                    <td>Rp {{ number_format($item->harga_barang, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                                     <td>{{ $item->satuan }}</td>
                                     <td>{{ $item->keterangan }}</td>
@@ -120,7 +121,7 @@
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal-{{ $item->id_barang }}">
                                             Detail
                                         </button>
-                                      
+                                    
                                         <!-- Modal untuk setiap barang -->
                                         <div class="modal fade" id="exampleModal-{{ $item->id_barang }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -137,12 +138,40 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>Tanggal Masuk</th>
-                                                                    <th>Tanggal Keluar</th>
+                                                                    <td>{{ $item->tanggal_masuk }}</td>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody>
                                                                 <tr>
-                                                                    <td>{{ $item->tanggal }}</td>
+                                                                    <th>Tanggal Keluar</th>
+                                                                    <td>{{ $item->tanggal_keluar ?? '-' }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Harga Beli</th>
+                                                                    <td>{{ number_format($item->harga_beli, 0, ',', '.') }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Harga Jual</th>
+                                                                    <td>{{ number_format($item->harga_jual, 0, ',', '.') }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Stok</th>
+                                                                    <td>{{ $item->stok }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Jumlah Keluar</th>
+                                                                    <td>{{ $item->jumlah_keluar ?? 0 }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Satuan</th>
+                                                                    <td>{{ $item->satuan }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Detail Obat</th>
+                                                                    <td>{{ $item->detail_obat }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>{{ $item->tanggal_masuk }}</td>
                                                                     <td>{{ $item->tanggal_keluar }}</td>
                                                                 </tr>
                                                             </tbody>
@@ -158,34 +187,55 @@
                                             </div>
                                         </div>
                                     </td>
-                                  
+                                    
                                 </tr>
                             @endforeach
                         </tbody>
+                        
+                            
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </main>
-
 @endsection
 
 @push('scripts')
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 <script>
+    let selectedId = '';
+
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
+        let table = $('#dataTable').DataTable({
             language: {
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ barang"
             }
         });
 
         $('#filterKategori').on('change', function () {
-            var value = $(this).val();
+            let value = $(this).val();
             table.column(2).search(value).draw();
         });
     });
+
+    function openDeleteModal(id) {
+        selectedId = id;
+        $("#verifyId").val('');
+        $("#deleteButton").prop('disabled', true);
+        $("#deleteModal").modal("show");
+    }
+
+    function validateDelete() {
+        let inputId = document.getElementById("verifyId").value.trim();
+        document.getElementById("deleteButton").disabled = (inputId !== selectedId);
+    }
+
+    function confirmDelete() {
+        alert("Barang dengan Kode " + selectedId + " berhasil dihapus.");
+        $("#deleteModal").modal("hide");
+        // Implement AJAX delete logic if needed
+    }
 </script>
 @endpush

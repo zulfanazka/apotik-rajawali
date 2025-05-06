@@ -3,130 +3,146 @@
 @section('content')
     <main>
         <div class="container-fluid">
-            <h1 class="mt-4 mb-4">Barang keluar</h1>
+            <h1 class="mt-4 mb-4">Barang Keluar</h1>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="startMonth">Pilih Bulan</label>
-                    <input type="month" class="form-control" id="startMonth">
-                </div>
-                <div class="col-md-4">
-                    <label for="startDate">Tanggal Awal</label>
-                    <input type="date" class="form-control" id="startDate">
-                </div>
-                <div class="col-md-4">
-                    <label for="endDate">Tanggal Akhir</label>
-                    <input type="date" class="form-control" id="endDate">
+            <!-- Filter dan Tombol -->
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between">
+                    <!-- Filter Kategori -->
+                    <div>
+                        <label>
+                            Kategori:
+                            <select id="kategoriFilter" class="form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="Obat">Obat</option>
+                                <option value="Vitamin">Vitamin</option>
+                                <option value="Antibiotik">Antibiotik</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Tombol Tambah dan Cetak -->
+                    <div>
+                        <a href="{{ route('tambahbarangkeluar') }}" class="btn btn-success">Tambah Barang Keluar</a>
+                        <button type="button" class="btn btn-danger mx-2">Cetak</button>
+                    </div>
                 </div>
             </div>
 
+            <!-- Tabel -->
+            <div class="col-md-12 mt-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID Barang</th>
+                                        <th>Nama Barang</th>
+                                        <th>Kategori</th>
+                                        <th>Satuan</th>
+                                        <th>Tanggal Masuk</th>
+                                        <th>Tanggal Keluar</th>
+                                        <th>Harga Beli</th>
+                                        <th>Harga Jual</th>
+                                        <th>Stok</th>
+                                        <th>Jumlah Keluar</th>
+                                        <th>Detail</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($barangKeluar as $item)
+                                        <tr>
+                                            <td>{{ $item->id_barang }}</td>
+                                            <td>{{ $item->inventory->nama_barang ?? '-' }}</td>
+                                            <td>{{ $item->inventory->kategori ?? '-' }}</td>
+                                            <td>{{ $item->inventory->satuan ?? '-' }}</td>
+                                            <td>{{ $item->inventory->tanggal_masuk ?? '-' }}</td>
+                                            <td>{{ $item->tanggal_keluar }}</td>
+                                            <td>{{ number_format($item->inventory->harga_beli ?? 0, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($item->inventory->harga_jual ?? 0, 0, ',', '.') }}</td>
+                                            <td>{{ $item->inventory->stok ?? 0 }}</td>
+                                            <td>{{ $item->jumlah_keluar }}</td>
+                                            <td>{{ $item->detail_obat }}</td>
+                                            <td>{{ $item->keterangan }}</td>
+                                            <td>
+                                                <!-- Tombol Edit -->
+                                                <a href="{{ route('editbarangkeluar', ['id_barang' => $item->id_barang]) }}"
+                                                    class="btn btn-sm btn-success">Edit</a>
+                                                <button class="btn btn-sm btn-danger delete-btn"
+                                                    data-id="{{ $item->id_barang }}" data-toggle="modal"
+                                                    data-target="#deleteModal-{{ $item->id_barang }}">
+                                                    Hapus
+                                                </button>
 
-            <!-- Tombol dengan Jarak -->
-            <!-- <div class="col-md-12">
-                        <div class="d-flex justify-content-between"> -->
-            <!-- Filter di Kiri -->
-            <!-- <div class="dataTables_length" id="dataTable_length">
-                                <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm">
-                                    <option value="merkbarang" hidden>Merk barang</option>
-                                    <option value="Samsung">Paracetamol</option>
-                                    <option value="Apple">OBH Combi</option>
-                                    <option value="Xiaomi">Bufadol</option>
-                                    <option value="Vivo">Imboost</option>
-                                </select>
-                            </div> -->
+                                                <!-- Modal Konfirmasi -->
+                                                <div class="modal fade" id="deleteModal-{{ $item->id_barang }}"
+                                                    tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Konfirmasi Hapus Barang</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span>&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Apakah kamu yakin ingin menghapus barang keluar ini?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <form
+                                                                    action="{{ route('deletebarangkeluar', ['id_barang' => $item->id_barang]) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger">Hapus</button>
+                                                                </form>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Batal</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
 
-            <!-- Button di Kanan -->
-            <!-- <div>
-                                <a href="tambahbarang.html"  class="btn btn-success">Tambah barang</a>
-                                <button type="button" class="btn btn-danger mx-2">Cetak</button>
-                            </div>
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
                         </div>
-                    </div> -->
-
-        </div>
-
-        <!-- <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Static Navigation</li>
-                    </ol> -->
-        <div class="col-md-12 mt-3">
-            <div class="card mb-4">
-                <!-- <div class="card-header">
-                            <i class="fas fa-table mr-1"></i>
-                            DataTable Example
-                        </div> -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Nama Barang</th>
-                                    <th>Tanggal Keluar </th>
-                                    <th>Keterangan</th>
-                                </tr>
-                            </thead>
-                            <!-- <tfoot>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
-                                            </tr>
-                                        </tfoot> -->
-                            <tbody>
-                                <tr>
-                                    <td>Barang A</td>
-                                    <td>
-                                        <input type="date" class="form-control" id="tanggal-1"
-                                            onchange="updateTanggal(1)">
-                                    </td>
-                                    <td>
-                                        <select class="form-control" id="keterangan-1" onchange="updateKeterangan(1)">
-                                            <option value="">Pilih Keterangan</option>
-                                            <option value="Exp">Exp</option>
-                                            <option value="Terjual">Terjual</option>
-                                        </select>
-                                        <span id="status-1" class="badge"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Barang B</td>
-                                    <td>
-                                        <input type="date" class="form-control" id="tanggal-2"
-                                            onchange="updateTanggal(2)">
-                                    </td>
-                                    <td>
-                                        <select class="form-control" id="keterangan-2" onchange="updateKeterangan(2)">
-                                            <option value="">Pilih Keterangan</option>
-                                            <option value="Exp">Exp</option>
-                                            <option value="Terjual">Terjual</option>
-                                        </select>
-                                        <span id="status-2" class="badge"></span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-    <script>
-        function openDeleteModal() {
-            $("#deleteModal").modal("show");
-        }
 
-        function validateDelete() {
-            let inputId = document.getElementById("verifyId").value;
-            document.getElementById("deleteButton").disabled = inputId.trim() === "";
-        }
+    <!-- Script -->
+    @push('scripts')
+        <script>
+            // Tampilkan modal konfirmasi hapus
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        $('#deleteModal-' + id).modal('show');
 
-        function confirmDelete() {
-            let inputId = document.getElementById("verifyId").value;
-            alert("Barang dengan ID " + inputId + " berhasil dihapus");
-            $("#deleteModal").modal("hide");
-        }
-    </script>
+                    });
+                });
+
+                // Filter kategori di DataTables
+                $('#dataTable').DataTable();
+
+                $('#kategoriFilter').on('change', function() {
+                    var val = $(this).val();
+                    var table = $('#dataTable').DataTable();
+                    table.column(2).search(val).draw(); // kolom kategori
+                });
+            });
+        </script>
+    @endpush
 @endsection

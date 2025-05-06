@@ -12,12 +12,12 @@
                     <div class="dataTables_length" id="dataTable_length">
                         <label>
                             Kategori
-                          <select id="kategoriFilter" class="custom-select custom-select-sm form-control form-control-sm">
-                            <option value="">Semua</option>
-                            <option value="Obat">Obat</option>
-                            <option value="Vitamin">Vitamin</option>
-                            <option value="Antibiotik">Antibiotik</option>
-                          </select>
+                            <select id="kategoriFilter" class="custom-select custom-select-sm form-control form-control-sm">
+                                <option value="">Semua</option>
+                                <option value="Obat">Obat</option>
+                                <option value="Vitamin">Vitamin</option>
+                                <option value="Antibiotik">Antibiotik</option>
+                            </select>
                         </label>
                     </div>
 
@@ -37,38 +37,41 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Nama Barang</th>
                                     <th>ID Barang</th>
+                                    <th>Nama Barang</th>
                                     <th>Kategori</th>
-                                    <th>Kuantitas</th>
-                                    <th>Detail Obat</th>
-                                    <th>Keterangan</th>
+                                    <th>Satuan</th>
+                                    {{-- <th>Detail Barang</th> --}}
+                                    {{-- <th>Detail Obat</th> --}}
                                     <th>Tanggal Masuk</th>
                                     <th>Harga Beli</th>
                                     <th>Harga Jual</th>
+                                    <th>stok</th>
+                                    <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($barang as $item)
                                     <tr>
-                                        <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->id_barang }}</td>
+                                        <td>{{ $item->nama_barang }}</td>
                                         <td>{{ $item->kategori }}</td>
-                                        <td>{{ $item->kuantitas }}</td>
-                                        <td>{{ $item->detail_obat }}</td>
-                                        <td>{{ $item->keterangan }}</td>
-                                        <td>{{ $item->tanggal }}</td>
-                                        <td>{{ $item->harga_barang }}</td>
+                                        <td>{{ $item->satuan }}</td>
+                                        <td>{{ $item->tanggal_masuk }}</td>
+                                        <td>{{ $item->harga_beli }}</td>
                                         <td>{{ $item->harga_jual }}</td>
+                                        <td>{{ $item->stok }}</td>
+                                        <td>{{ $item->keterangan }}</td>
                                         <td>
                                             <!-- Tombol Edit -->
-                                            <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}" class="btn btn-success">Edit</a>
+                                            <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}"
+                                                class="btn btn-success">Edit</a>
 
 
                                             <!-- Tombol Hapus -->
-                                            <button class="btn btn-danger delete-btn"
-                                                data-id="{{ $item->id_barang }}" data-toggle="modal"
+                                            <button class="btn btn-danger delete-btn" data-id="{{ $item->id_barang }}"
+                                                data-toggle="modal"
                                                 data-target="#deleteModal-{{ $item->id_barang }}">Hapus</button>
 
                                             <!-- Modal Konfirmasi Hapus -->
@@ -90,7 +93,9 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-dismiss="modal">Batal</button>
-                                                            <form action="{{ route('deletebarang', ['id' => $item->id_barang]) }}" method="POST">
+                                                            <form
+                                                                action="{{ route('deletebarang', ['id' => $item->id_barang]) }}"
+                                                                method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="btn btn-danger">Hapus</button>
@@ -134,13 +139,13 @@
 
             // 2) Pasang listener ke dropdown kategori
             $('#kategoriFilter').on('change', function() {
-                var val = $(this).val();         // ambil nilai dropdown
+                var val = $(this).val(); // ambil nilai dropdown
                 // kolom kategori di tabelmu berada di index ke-2 (0-based: 0=Nama,1=ID,2=Kategori)
                 table
-                  .column(2)                     // pilih kolom Kategori
-                  .search(val)                   // filter berdasarkan nilai val
-                  .draw();                       // redraw tabel
+                    .column(2) // pilih kolom Kategori
+                    .search(val) // filter berdasarkan nilai val
+                    .draw(); // redraw tabel
             });
         });
-        </script>
+    </script>
 @endsection

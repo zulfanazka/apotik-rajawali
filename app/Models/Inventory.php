@@ -13,13 +13,29 @@ class Inventory extends Model
     protected $primaryKey = 'id_barang'; // INI PENTING
 
     public $timestamps = false; // kalau kamu gak pakai created_at dan updated_at
+    public $incrementing = false; // ← ini penting
+    protected $keyType = 'string'; // ← sesuaikan jika id_barang berupa string
 
     protected $fillable = [
-        'kategori', 'tanggal', 'nama_barang',
-        'harga_barang', 'harga_jual',
-        'id_barang', 'kuantitas',
-        'detail_obat', 'keterangan'
+        'id_barang',
+        'nama_barang',
+        'kategori',
+        'satuan',
+        'tanggal_masuk',
+        'tanggal_keluar',
+        'harga_beli',
+        'harga_jual',
+        'stok',
+        'jumlah_keluar',
+        'keterangan'
     ];
+
+    // Menambahkan relasi ke model BarangKeluar
+    public function barangKeluar()
+    {
+        return $this->hasMany(BarangKeluar::class, 'id_barang', 'id_barang');
+    }
+
 
 
 }
