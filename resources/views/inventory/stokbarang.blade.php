@@ -111,7 +111,7 @@
                                     <td>{{ $item->nama_barang }}</td>
                                     <td>{{ $item->id_barang }}</td>
                                     <td>{{ $item->kategori }}</td>
-                                    <td>{{ $item->kuantitas }}</td>
+                                    <td>{{ $item->stok }}</td>
                                     <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                                     <td>{{ $item->satuan }}</td>
