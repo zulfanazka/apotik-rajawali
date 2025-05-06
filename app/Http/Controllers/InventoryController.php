@@ -176,9 +176,18 @@ class InventoryController extends Controller
     // Menampilkan form tambah barang keluar
     public function tambahBarangKeluar()
     {
-        $barangMasuk = Inventory::select('id_barang', 'nama_barang', 'stok', 'satuan', 'harga_beli', 'harga_jual')->get();
+        // Mengambil data barang dan menghitung keuntungan dan kerugian
+        $barangMasuk = Inventory::select('id_barang', 'nama_barang', 'kategori', 'stok', 'satuan', 'harga_beli', 'harga_jual')
+            ->get()
+            ->map(function ($item) {
+                $item->keuntungan = ($item->harga_jual - $item->harga_beli);  // Keuntungan per barang
+                $item->kerugian = ($item->harga_beli - $item->harga_jual);    // Kerugian per barang
+                return $item;
+            });
+
         return view('inventory.tambahbarangkeluar', compact('barangMasuk'));
     }
+
 
 
 
@@ -262,6 +271,7 @@ class InventoryController extends Controller
             'jumlah_keluar' => 'required|numeric',
             'detail_obat' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string|max:255',
+
         ]);
 
         // Cari barang keluar berdasarkan ID

@@ -101,7 +101,7 @@
                                         </td>
                                         <td>{{ $produk->nama_barang }}</td>
                                         <td>Rp. {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
-                                        <td>Rp. {{ number_format($produk->total_keuntungan, 0, ',', '.') }}</td>
+                                        <td>Rp. {{ number_format($produk->keuntungan, 0, ',', '.') }}</td>
                                         <!-- Keuntungan per Produk -->
                                     </tr>
                                 @endforeach

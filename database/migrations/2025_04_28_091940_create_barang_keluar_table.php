@@ -12,19 +12,21 @@ return new class extends Migration {
     {
         Schema::create('barang_keluar', function (Blueprint $table) {
             $table->id();
-            $table->string('id_barang'); // ID Barang, pastikan unik
+            $table->string('id_barang'); // ID Barang
             $table->string('nama_barang'); // Nama Barang
             $table->string('kategori'); // Kategori
             $table->string('satuan'); // Satuan barang
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable()->default(null);
-            $table->integer('harga_beli'); // Efek samping barang
-            $table->integer('harga_jual');
-            $table->integer('stok'); // stok sebagai integer
-            $table->integer('jumlah_keluar')->nullable(); // Menjadikan jumlah_keluar nullable;
-            $table->text('detail_obat')->nullable(); // Penggunaan barang
-            $table->text('keterangan')->nullable();
-            $table->timestamps(); // Kolom waktu pembuatan dan update
+            $table->integer('harga_beli'); // Harga beli barang
+            $table->integer('harga_jual'); // Harga jual barang
+            $table->integer('stok'); // Stok tersisa
+            $table->integer('jumlah_keluar')->nullable(); // Jumlah keluar
+            $table->text('detail_obat')->nullable(); // Keterangan terjual / exp
+            $table->text('keterangan')->nullable(); // Keterangan tambahan
+            $table->integer('keuntungan')->default(0); // Keuntungan jika terjual
+            $table->integer('kerugian')->default(0); // Kerugian jika exp
+            $table->timestamps(); // created_at & updated_at
         });
     }
 

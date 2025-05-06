@@ -27,7 +27,7 @@ class BarangKeluar extends Model
         'harga_jual',
         'stok',
         'jumlah_keluar',
-        'detail',
+        'detail_obat',
         'keterangan'
 
     ];
