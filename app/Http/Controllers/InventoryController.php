@@ -25,6 +25,36 @@ class InventoryController extends Controller
         return view("inventory.stokbarang", compact('items'));
     }
 
+    public function deleteStokBarang($id_barang)
+    {
+        try {
+            // Ambil semua data inventory dengan id_barang
+            $barangs = Inventory::where('id_barang', $id_barang)->get();
+    
+            if ($barangs->isEmpty()) {
+                return redirect()->route('stokbarang')->with('error', 'Barang tidak ditemukan.');
+            }
+    
+            // Format waktu sekarang (misalnya: 06-05-2025 13:45)
+            $timestamp = now()->format('d-m-Y H:i');
+    
+            // Update keterangan pada semua data barang_keluar terkait
+            BarangKeluar::where('id_barang', $id_barang)
+                ->update(['keterangan' => 'Item dihapus dari stok pada ' . $timestamp]);
+    
+            // Hapus semua data dari inventory
+            foreach ($barangs as $barang) {
+                $barang->delete();
+            }
+    
+            return redirect()->route('stokbarang')->with('success', 'Barang berhasil dihapus dan keterangan barang keluar telah diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->route('stokbarang')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+    
+    
+
     // Menampilkan halaman barangmasuk dan mengambil data barang
     public function barangMasuk()
     {
@@ -200,11 +230,12 @@ class InventoryController extends Controller
             'detail_obat' => 'required|in:terjual,exp',
             'keterangan' => 'nullable|string|max:255',
         ];
+    
         $data = $request->validate($rules);
-
-        // Ambil inventory
+    
+        // Ambil inventory berdasarkan id_barang
         $barang = Inventory::where('id_barang', $data['id_barang'])->firstOrFail();
-
+    
         // Hitung keuntungan / kerugian
         $qty = $data['jumlah_keluar'];
         $keuntungan = 0;
@@ -214,11 +245,16 @@ class InventoryController extends Controller
         } else {
             $kerugian = ($barang->harga_beli - $barang->harga_jual) * $qty;
         }
-
+    
         // Kurangi stok di inventory
         $barang->stok -= $qty;
+        
+        // Update tanggal_keluar terbaru di inventory
+        $barang->tanggal_keluar = $data['tanggal_keluar'];
+    
+        // Simpan perubahan pada tabel inventory
         $barang->save();
-
+    
         // Siapkan payload untuk barang_keluar
         $payload = [
             'id_barang' => $barang->id_barang,
@@ -236,7 +272,7 @@ class InventoryController extends Controller
             'keuntungan' => $keuntungan,
             'kerugian' => $kerugian,
         ];
-
+    
         if ($request->has('edit')) {
             // update existing
             $existing = BarangKeluar::findOrFail($request->edit);
@@ -245,10 +281,11 @@ class InventoryController extends Controller
             // create new
             BarangKeluar::create($payload);
         }
-
+    
         return redirect()->route('barangkeluar')
             ->with('success', 'Data barang keluar berhasil disimpan!');
     }
+    
 
 
 

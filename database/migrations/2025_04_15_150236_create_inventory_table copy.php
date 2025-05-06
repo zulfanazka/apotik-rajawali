@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('inventory', function (Blueprint $table) {
+        Schema::create('barang_masuk', function (Blueprint $table) {
             $table->id();
             $table->string('id_barang'); // ID Barang, pastikan unik
             $table->string('nama_barang'); // Nama Barang
             $table->string('kategori'); // Kategori
             $table->string('satuan'); // Satuan barang
             $table->date('tanggal_masuk');
-            $table->date('tanggal_keluar')->nullable()->default(null);
+            $table->date('tanggal_keluar')->nullable()->default(null)->change();
             $table->integer('harga_beli'); // Efek samping barang
             $table->integer('harga_jual');
             $table->integer('stok'); // stok sebagai integer

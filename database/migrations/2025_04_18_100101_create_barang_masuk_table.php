@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('kategori'); // Kategori
             $table->string('satuan'); // Satuan barang
             $table->date('tanggal_masuk');
+            $table->date('tanggal_keluar')->nullable()->default(null)->change();
             $table->integer('harga_beli'); // Harga beli barang
             $table->integer('harga_jual');
             $table->integer('stok'); // stok sebagai integer

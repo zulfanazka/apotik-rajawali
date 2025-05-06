@@ -142,7 +142,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Tanggal Keluar</th>
-                                                                    <td>{{ $item->tanggal_keluar ?? '-' }}</td>
+                                                                    <td>{{ $item->tanggal_keluar }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Harga Beli</th>
@@ -170,15 +170,45 @@
                                                                     <th>Detail Obat</th>
                                                                     <td>{{ $item->detail_obat }}</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td>{{ $item->tanggal_masuk }}</td>
-                                                                    <td>{{ $item->tanggal_keluar }}</td>
-                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                         <!-- Tombol di dalam Modal -->
                                                         <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}" class="btn btn-success">Edit</a>
-                                                        <a href="{{ route('deletebarang', ['id' => $item->id_barang]) }}" class="btn btn-danger">Hapus</a>
+                                                        <!-- Tombol trigger modal -->
+<button class="btn btn-sm btn-danger" data-toggle="modal"
+data-target="#deleteModal-{{ $item->id_barang }}">
+Hapus
+</button>
+
+<!-- Modal Konfirmasi -->
+<div class="modal fade" id="deleteModal-{{ $item->id_barang }}" tabindex="-1"
+aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Konfirmasi Hapus Stok Barang</h5>
+        <button type="button" class="close" data-dismiss="modal"
+                aria-label="Close">
+            <span>&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Apakah kamu yakin ingin menghapus <strong>{{ $item->nama_barang }}</strong> dari stok?
+    </div>
+    <div class="modal-footer">
+        <form action="{{ route('deletestokbarang', ['id_barang' => $item->id_barang]) }}"
+              method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+    </div>
+</div>
+</div>
+</div>
+
+                                                      
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>

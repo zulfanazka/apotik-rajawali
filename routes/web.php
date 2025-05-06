@@ -35,6 +35,8 @@ Route::post('inventory/simpanbarangkeluar', [InventoryController::class, 'simpan
 // Hapus barang
 Route::delete('inventory/{id}', [InventoryController::class, 'delete'])->name('deletebarang');
 Route::delete('inventory/barangkeluar/{id_barang}', [InventoryController::class, 'deleteBarangKeluar'])->name('deletebarangkeluar');
+Route::delete('inventory/stokbarang/{id_barang}', [InventoryController::class, 'deleteStokBarang'])->name('deletestokbarang');
+
 
 
 Route::post('/update-barang', [InventoryController::class, 'updateBarang'])->name('updateBarang');
