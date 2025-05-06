@@ -29,6 +29,7 @@ class BarangKeluar extends Model
         'jumlah_keluar',
         'detail',
         'keterangan'
+
     ];
 
     // Menambahkan relasi ke model Inventory

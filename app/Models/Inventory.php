@@ -30,5 +30,12 @@ class Inventory extends Model
         'keterangan'
     ];
 
+    // Menambahkan relasi ke model BarangKeluar
+    public function barangKeluar()
+    {
+        return $this->hasMany(BarangKeluar::class, 'id_barang', 'id_barang');
+    }
+
+
 
 }

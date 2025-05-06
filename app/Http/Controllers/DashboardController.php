@@ -12,10 +12,21 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Menghitung total stok yang masuk dan keluar
         $totalMasuk = Inventory::sum('stok');
         $totalKeluar = BarangKeluar::sum('stok');
         $totalStokSaatIni = $totalMasuk - $totalKeluar;
-        $totalTransaksi = DB::table('barang_keluar')->sum(DB::raw('harga_jual * stok'));
+
+        // Menghitung total transaksi dengan mempertimbangkan keuntungan/kerugian
+        $totalTransaksi = DB::table('barang_keluar')
+            ->select(DB::raw('SUM(
+                CASE
+                    WHEN detail_obat = "terjual" THEN harga_jual * stok
+                    WHEN detail_obat = "exp" THEN - (harga_beli * stok)
+                    ELSE 0
+                END
+            ) as total_transaksi'))
+            ->value('total_transaksi');
 
         // Ambil top 5 produk terlaris berdasarkan jumlah stok keluar
         $topProduk = DB::table('barang_keluar')
@@ -33,4 +44,5 @@ class DashboardController extends Controller
             'topProduk'
         ));
     }
+
 }

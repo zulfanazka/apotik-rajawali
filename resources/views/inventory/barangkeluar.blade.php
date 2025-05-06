@@ -57,44 +57,44 @@
                                         <tr>
                                             <td>{{ $item->id_barang }}</td>
                                             <td>{{ $item->inventory->nama_barang ?? '-' }}</td>
-                                            <!-- Menggunakan relasi untuk nama_barang -->
                                             <td>{{ $item->inventory->kategori ?? '-' }}</td>
-                                            <!-- Menggunakan relasi untuk kategori -->
                                             <td>{{ $item->inventory->satuan ?? '-' }}</td>
-                                            <!-- Menggunakan relasi untuk satuan -->
                                             <td>{{ $item->inventory->tanggal_masuk ?? '-' }}</td>
-                                            <!-- Menggunakan relasi untuk tanggal masuk -->
                                             <td>{{ $item->tanggal_keluar }}</td>
                                             <td>{{ number_format($item->inventory->harga_beli ?? 0, 0, ',', '.') }}</td>
-                                            <!-- Menggunakan relasi untuk harga beli -->
                                             <td>{{ number_format($item->inventory->harga_jual ?? 0, 0, ',', '.') }}</td>
-                                            <!-- Menggunakan relasi untuk harga jual -->
                                             <td>{{ $item->inventory->stok ?? 0 }}</td>
-                                            <!-- Menggunakan relasi untuk stok -->
                                             <td>{{ $item->jumlah_keluar }}</td>
-                                            <td>{{ $item->detail }}</td>
+                                            <td>{{ $item->detail_obat }}</td>
                                             <td>{{ $item->keterangan }}</td>
                                             <td>
+                                                <!-- Tombol Edit -->
                                                 <a href="{{ route('editbarangkeluar', ['id_barang' => $item->id_barang]) }}"
                                                     class="btn btn-sm btn-success">Edit</a>
                                                 <button class="btn btn-sm btn-danger delete-btn"
-                                                    data-id="{{ $item->id_barang }}">Hapus</button>
+                                                    data-id="{{ $item->id_barang }}" data-toggle="modal"
+                                                    data-target="#deleteModal-{{ $item->id_barang }}">
+                                                    Hapus
+                                                </button>
 
-                                                <!-- Modal Konfirmasi Hapus -->
+                                                <!-- Modal Konfirmasi -->
                                                 <div class="modal fade" id="deleteModal-{{ $item->id_barang }}"
-                                                    tabindex="-1" aria-hidden="true">
+                                                    tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title">Konfirmasi Hapus Barang</h5>
-                                                                <button type="button" class="close"
-                                                                    data-dismiss="modal"><span>&times;</span></button>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span>&times;</span>
+                                                                </button>
                                                             </div>
-                                                            <div class="modal-body">Yakin ingin menghapus barang keluar ini?
+                                                            <div class="modal-body">
+                                                                Apakah kamu yakin ingin menghapus barang keluar ini?
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <form
-                                                                    action="{{ route('deletebarangkeluar', ['id' => $item->id_barang]) }}"
+                                                                    action="{{ route('deletebarangkeluar', ['id_barang' => $item->id_barang]) }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     @method('DELETE')
@@ -108,6 +108,7 @@
                                                     </div>
                                                 </div>
                                             </td>
+
                                         </tr>
                                     @endforeach
 
@@ -129,6 +130,7 @@
                     button.addEventListener('click', function() {
                         const id = this.dataset.id;
                         $('#deleteModal-' + id).modal('show');
+
                     });
                 });
 

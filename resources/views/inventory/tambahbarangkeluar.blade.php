@@ -1,106 +1,112 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 0px 20px;
-        }
-    </style>
-
-    <div class="container">
+    <div class="container my-4 p-4 bg-white rounded">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('barangkeluar') }}" class="fw-bold text-dark">Barang Keluar</a>
+                    <a href="{{ route('barangkeluar') }}">Barang Keluar</a>
                 </li>
-                <li class="breadcrumb-item active text-primary" aria-current="page">
-                    <strong>Tambah Barang Keluar</strong>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ isset($barangKeluar) ? 'Edit Barang Keluar' : 'Tambah Barang Keluar' }}
                 </li>
             </ol>
         </nav>
 
         <form action="{{ route('simpanbarangkeluar') }}" method="POST">
             @csrf
+            @if (isset($barangKeluar))
+                {{-- flag untuk update --}}
+                <input type="hidden" name="edit" value="{{ $barangKeluar->id }}">
+            @endif
 
-            <div class="row mt-3">
-                <div class="col-md-6 mb-3">
-                    <label for="id_barang" class="form-label">Pilih Barang</label>
-                    <select class="form-select" name="id_barang" id="id_barang" required>
-                        <option hidden>- Pilih Barang -</option>
-                        @foreach ($barangMasuk as $b)
-                            <option value="{{ $b->id_barang }}" data-nama="{{ $b->nama_barang }}"
-                                data-satuan="{{ $b->satuan }}" data-stok="{{ $b->stok }}"
-                                data-harga_beli="{{ $b->harga_beli }}" data-harga_jual="{{ $b->harga_jual }}"
-                                data-tanggal_masuk="{{ $b->tanggal_masuk }}" data-kategori="{{ $b->kategori }}"
-                                {{ old('id_barang') == $b->id_barang ? 'selected' : '' }}>
-                                {{ $b->nama_barang }} ({{ $b->id_barang }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_barang')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+            {{-- Pilih barang --}}
+            <div class="mb-3">
+                <label for="id_barang" class="form-label">Pilih Barang</label>
+                <select name="id_barang" id="id_barang" class="form-select" required>
+                    <option value="" hidden>-- Pilih --</option>
+                    @foreach ($barangMasuk as $b)
+                        <option value="{{ $b->id_barang }}" data-nama="{{ $b->nama_barang }}"
+                            data-stok="{{ $b->stok }}" data-satuan="{{ $b->satuan }}"
+                            data-kategori="{{ $b->kategori }}" data-harga_beli="{{ $b->harga_beli }}"
+                            data-harga_jual="{{ $b->harga_jual }}" data-tanggal_masuk="{{ $b->tanggal_masuk }}"
+                            {{ old('id_barang', $barangKeluar->id_barang ?? '') == $b->id_barang ? 'selected' : '' }}>
+                            {{ $b->nama_barang }} ({{ $b->id_barang }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('id_barang')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-                <div class="col-md-6 mb-3">
-                    <label for="tanggal_keluar" class="form-label">Tanggal Keluar</label>
-                    <input type="date" name="tanggal_keluar" class="form-control"
-                        value="{{ old('tanggal_keluar', now()->format('Y-m-d')) }}" required>
-                    @error('tanggal_keluar')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+            {{-- Tanggal keluar --}}
+            <div class="mb-3">
+                <label for="tanggal_keluar" class="form-label">Tanggal Keluar</label>
+                <input type="date" name="tanggal_keluar" id="tanggal_keluar" class="form-control"
+                    value="{{ old('tanggal_keluar', $barangKeluar->tanggal_keluar ?? now()->format('Y-m-d')) }}" required>
+                @error('tanggal_keluar')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="nama_barang" class="form-label">Nama Barang</label>
-                    <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                {{-- Nama Barang --}}
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Nama Barang</label>
+                    <input type="text" id="nama_barang" class="form-control" readonly>
                 </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="stok" class="form-label">Stok Tersedia</label>
-                    <input type="number" name="stok" id="stok" class="form-control" readonly>
+                {{-- Stok --}}
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Stok</label>
+                    <input type="number" id="stok" class="form-control" readonly>
                 </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="satuan" class="form-label">Satuan</label>
-                    <input type="text" name="satuan" id="satuan" class="form-control" readonly>
+                {{-- Satuan --}}
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Satuan</label>
+                    <input type="text" id="satuan" class="form-control" readonly>
                 </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="jumlah_keluar" class="form-label">Jumlah Keluar</label>
-                    <input type="number" name="jumlah_keluar" class="form-control" id="jumlah_keluar"
-                        value="{{ old('jumlah_keluar') }}" required>
-                    @error('jumlah_keluar')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="harga_beli" class="form-label">Harga Beli</label>
-                    <input type="number" name="harga_beli" id="harga_beli" class="form-control" readonly>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="harga_jual" class="form-label">Harga Jual</label>
-                    <input type="number" name="harga_jual" id="harga_jual" class="form-control" readonly>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="tanggal_masuk" class="form-label">Tanggal Masuk</label>
-                    <input type="date" name="tanggal_masuk" id="tanggal_masuk" class="form-control" readonly>
+                {{-- Kategori --}}
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Kategori</label>
+                    <input type="text" id="kategori" class="form-control" readonly>
                 </div>
             </div>
 
-            <div class="mb-4">
+            {{-- Jumlah Keluar --}}
+            <div class="mb-3">
+                <label for="jumlah_keluar" class="form-label">Jumlah Keluar</label>
+                <input type="number" name="jumlah_keluar" id="jumlah_keluar" class="form-control"
+                    value="{{ old('jumlah_keluar', $barangKeluar->jumlah_keluar ?? '') }}" required>
+                @error('jumlah_keluar')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Detail (terjual/exp) --}}
+            <div class="mb-3">
+                <label for="detail_obat" class="form-label">Detail</label>
+                <select name="detail_obat" id="detail_obat" class="form-select" required>
+                    <option value="terjual"
+                        {{ old('detail_obat', $barangKeluar->detail_obat ?? '') == 'terjual' ? 'selected' : '' }}>
+                        Terjual
+                    </option>
+                    <option value="exp"
+                        {{ old('detail_obat', $barangKeluar->detail_obat ?? '') == 'exp' ? 'selected' : '' }}>
+                        Exp
+                    </option>
+                </select>
+                @error('detail_obat')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Keterangan --}}
+            <div class="mb-3">
                 <label for="keterangan" class="form-label">Keterangan</label>
-                <textarea class="form-control" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
+                <textarea name="keterangan" class="form-control" rows="3">{{ old('keterangan', $barangKeluar->keterangan ?? '') }}</textarea>
                 @error('keterangan')
-                    <small class="text-danger">{{ $message }}</small>
+                    <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -113,24 +119,26 @@
 
     <script>
         document.getElementById('id_barang').addEventListener('change', function() {
-            let selected = this.options[this.selectedIndex];
-
-            document.getElementById('nama_barang').value = selected.dataset.nama || '';
-            document.getElementById('stok').value = selected.dataset.stok || '';
-            document.getElementById('satuan').value = selected.dataset.satuan || '';
-            document.getElementById('harga_beli').value = selected.dataset.harga_beli || '';
-            document.getElementById('harga_jual').value = selected.dataset.harga_jual || '';
-            document.getElementById('tanggal_masuk').value = selected.dataset.tanggal_masuk || '';
+            let opt = this.options[this.selectedIndex];
+            document.getElementById('nama_barang').value = opt.dataset.nama || '';
+            document.getElementById('stok').value = opt.dataset.stok || '';
+            document.getElementById('satuan').value = opt.dataset.satuan || '';
+            document.getElementById('kategori').value = opt.dataset.kategori || '';
         });
 
         document.getElementById('jumlah_keluar').addEventListener('input', function() {
-            let stok = parseInt(document.getElementById('stok').value) || 0;
-            let jumlah = parseInt(this.value);
-
-            if (jumlah > stok) {
-                alert('Jumlah keluar tidak boleh melebihi stok tersedia!');
-                this.value = stok;
+            let s = parseInt(document.getElementById('stok').value) || 0,
+                v = parseInt(this.value) || 0;
+            if (v > s) {
+                alert('Melebihi stok!');
+                this.value = s;
             }
+        });
+
+        // Trigger sekali untuk populate saat edit
+        window.addEventListener('DOMContentLoaded', function() {
+            let sel = document.getElementById('id_barang');
+            if (sel.value) sel.dispatchEvent(new Event('change'));
         });
     </script>
 @endsection

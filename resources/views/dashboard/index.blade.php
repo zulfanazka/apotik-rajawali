@@ -89,6 +89,7 @@
                                     <th>Produk</th>
                                     <th>Nama</th>
                                     <th>Harga</th>
+                                    <th>Keuntungan</th> <!-- Kolom Keuntungan -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,6 +101,8 @@
                                         </td>
                                         <td>{{ $produk->nama_barang }}</td>
                                         <td>Rp. {{ number_format($produk->harga_jual, 0, ',', '.') }}</td>
+                                        <td>Rp. {{ number_format($produk->total_keuntungan, 0, ',', '.') }}</td>
+                                        <!-- Keuntungan per Produk -->
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -107,7 +110,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
