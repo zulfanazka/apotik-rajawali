@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventory', function (Blueprint $table) {
+        Schema::create('barang_masuk', function (Blueprint $table) {
             $table->id();
             $table->string('nama_barang'); // Nama Barang
             $table->string('id_barang')->unique(); // ID Barang, pastikan unik
