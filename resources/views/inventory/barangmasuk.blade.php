@@ -12,7 +12,7 @@
                     <div class="dataTables_length" id="dataTable_length">
                         <label>
                             Kategori
-                            <select id="kategoriFilter" class="custom-select custom-select-sm form-control form-control-sm">
+                            <select id="kategoriFilter" class="custom-select form-control">
                                 <option value="">Semua</option>
                                 <option value="Obat">Obat</option>
                                 <option value="Vitamin">Vitamin</option>

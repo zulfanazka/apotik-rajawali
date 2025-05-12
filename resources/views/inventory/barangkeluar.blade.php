@@ -12,7 +12,7 @@
                     <div>
                         <label>
                             Kategori:
-                            <select id="kategoriFilter" class="form-control form-control-sm">
+                            <select id="kategoriFilter" class="form-control">
                                 <option value="">Semua</option>
                                 <option value="Obat">Obat</option>
                                 <option value="Vitamin">Vitamin</option>
@@ -122,27 +122,28 @@
     </main>
 
     <!-- Script -->
-    @push('scripts')
-        <script>
-            // Tampilkan modal konfirmasi hapus
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const id = this.dataset.id;
-                        $('#deleteModal-' + id).modal('show');
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-                    });
-                });
-
-                // Filter kategori di DataTables
-                $('#dataTable').DataTable();
-
-                $('#kategoriFilter').on('change', function() {
-                    var val = $(this).val();
-                    var table = $('#dataTable').DataTable();
-                    table.column(2).search(val).draw(); // kolom kategori
-                });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('table').addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.delete-btn')) {
+                    const id = e.target.getAttribute('data-id');
+                    $('#deleteModal-' + id).modal('show');
+                }
             });
-        </script>
-    @endpush
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#dataTable').DataTable();
+
+            $('#kategoriFilter').on('change', function() {
+                var val = $(this).val();
+                table.column(2).search(val).draw(); // kolom kategori
+            });
+        });
+    </script>
 @endsection

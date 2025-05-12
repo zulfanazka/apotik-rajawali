@@ -372,10 +372,10 @@ class InventoryController extends Controller
     }
 
 
-
-
-
-
-
+    public function laporan()
+    {
+        $barangKeluar = BarangKeluar::with('inventory')->get();
+        return view('inventory.laporan', compact('barangKeluar'));
+    }
 
 }
