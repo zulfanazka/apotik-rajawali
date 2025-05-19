@@ -81,30 +81,39 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>ID Barang</th>
+                                <th>Kategori</th>
+                                <th>Stok</th>
+                                <th>Harga Beli</th>
+                                <th>Harga Jual</th>
+                                <th>Satuan</th>
+                                <th>Keterangan</th>
+                                <th style="width: 120px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($items as $item)
                                 <tr>
-                                    <th>Nama</th>
-                                    <th>Kode</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Tanggal Keluar</th>
-                                    <th>Kategori</th>
-                                    <th>Stok</th>
-                                    <th>Keterangan</th>
+                                    <td>{{ $item->nama_barang }}</td>
+                                    <td>{{ $item->id_barang }}</td>
+                                    <td>{{ $item->kategori }}</td>
+                                    <td>{{ $item->kuantitas }}</td>
+                                    <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                                    <td>{{ $item->satuan }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                    <td class="d-flex justify-content-end">
+                                        <a href="{{ route('editbarang') }}" class="btn btn-success btn-sm p-1">Edit</a>
+                                        <button class="btn btn-danger btn-sm p-1 mx-2" onclick="openDeleteModal('{{ $item->id_barang }}')">Hapus</button>
+                                        <a href="#" class="btn btn-info btn-sm p-1">Detail</a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($items as $item)
-                                    <tr>
-                                        <td>{{ $item->nama_barang }}</td>
-                                        <td>{{ $item->tanggal_masuk }}</td>
-                                        <td>{{ $item->tanggal_keluar }}</td>
-                                        <td>{{ $item->kategori }}</td>
-                                        <td>{{ $item->kuantitas }}</td>
-                                        <td>{{ $item->keterangan }}</td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                            @endforeach
+                        </tbody>
+                        
                             
                     </table>
                 </div>
