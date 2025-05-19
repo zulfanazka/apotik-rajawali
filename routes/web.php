@@ -5,7 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
-
+use App\Models\Inventory;
 
 Route::get("/", [LoginController::class, 'login'])->name('login');
 Route::post('loginaction', [LoginController::class, 'loginaction'])->name('loginaction');
@@ -22,11 +22,22 @@ Route::get('inventory/barangkeluar', [InventoryController::class, 'barangKeluar'
 
 // Form untuk tambah atau edit barang
 Route::get('inventory/tambahbarang', [InventoryController::class, 'tambahBarang'])->name('tambahbarang');
+Route::get('inventory/tambahbarangkeluar', [InventoryController::class, 'tambahBarangKeluar'])->name('tambahbarangkeluar');
 Route::get('inventory/editbarang/{id_barang}', [InventoryController::class, 'editBarang'])->name('editbarang');
+Route::get('inventory/editbarangkeluar/{id_barang}', [InventoryController::class, 'editBarangKeluar'])->name('editbarangkeluar');
+
 
 
 // Simpan data barang (tambah atau update)
 Route::post('inventory/simpanbarang', [InventoryController::class, 'simpanBarang'])->name('simpanbarang');
+Route::post('inventory/simpanbarangkeluar', [InventoryController::class, 'simpanBarangKeluar'])->name('simpanbarangkeluar');
 
 // Hapus barang
 Route::delete('inventory/{id}', [InventoryController::class, 'delete'])->name('deletebarang');
+Route::delete('inventory/barangkeluar/{id_barang}', [InventoryController::class, 'deleteBarangKeluar'])->name('deletebarangkeluar');
+Route::delete('inventory/stokbarang/{id_barang}', [InventoryController::class, 'deleteStokBarang'])->name('deletestokbarang');
+
+Route::post('/update-barang', [InventoryController::class, 'updateBarang'])->name('updateBarang');
+
+Route::get('/inventory/laporan', [InventoryController::class, 'laporan'])->name('laporan');
+Route::get('/laporan/export/{format}', [InventoryController::class, 'export'])->name('laporan.export');
