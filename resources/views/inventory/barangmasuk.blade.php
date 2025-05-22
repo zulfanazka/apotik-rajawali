@@ -41,8 +41,6 @@
                                     <th>Nama Barang</th>
                                     <th>Kategori</th>
                                     <th>Satuan</th>
-                                    {{-- <th>Detail Barang</th> --}}
-                                    {{-- <th>Detail Obat</th> --}}
                                     <th>Tanggal Masuk</th>
                                     <th>Harga Beli</th>
                                     <th>Harga Jual</th>

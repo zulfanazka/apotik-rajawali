@@ -84,42 +84,104 @@
                 </div>
             </div>
 
-        <!-- Tabel Data -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-pills mr-1"></i>
-                Data Stok Barang Apotik Rajawali
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <!-- Tabel -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-pills mr-1"></i>
+                    Data Stok Barang Apotik Rajawali
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Nama</th>
-                                    <th>Kode</th>
-                                    <th>Tanggal Masuk</th>
-                                    <th>Tanggal Keluar</th>
+                                    <th>ID Barang</th>
                                     <th>Kategori</th>
                                     <th>Stok</th>
+                                    <th>Harga Beli</th>
+                                    <th>Harga Jual</th>
+                                    <th>Satuan</th>
                                     <th>Keterangan</th>
+                                    <th>Detail</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($items as $item)
                                     <tr>
                                         <td>{{ $item->nama_barang }}</td>
-                                        <td>{{ $item->tanggal_masuk }}</td>
-                                        <td>{{ $item->tanggal_keluar }}</td>
+                                        <td>{{ $item->id_barang }}</td>
                                         <td>{{ $item->kategori }}</td>
-                                        <td>{{ $item->kuantitas }}</td>
+                                        <td>{{ $item->stok }}</td>
+                                        <td>Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
+                                        <td>{{ $item->satuan }}</td>
                                         <td>{{ $item->keterangan }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#exampleModal-{{ $item->id_barang }}">
+                                                Detail
+                                            </button>
 
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            
-                    </table>
-                </div>
+                                            <!-- Modal Detail -->
+                                            <div class="modal fade" id="exampleModal-{{ $item->id_barang }}" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Detail Barang: {{ $item->nama_barang }}
+                                                            </h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-bordered">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th>Tanggal Masuk</th>
+                                                                        <td>{{ $item->tanggal_masuk }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Tanggal Keluar</th>
+                                                                        <td>{{ $item->tanggal_keluar }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Harga Beli</th>
+                                                                        <td>Rp
+                                                                            {{ number_format($item->harga_beli, 0, ',', '.') }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Harga Jual</th>
+                                                                        <td>Rp
+                                                                            {{ number_format($item->harga_jual, 0, ',', '.') }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Stok</th>
+                                                                        <td>{{ $item->stok }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Jumlah Keluar</th>
+                                                                        <td>{{ $item->jumlah_keluar ?? 0 }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Satuan</th>
+                                                                        <td>{{ $item->satuan }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Detail Obat</th>
+                                                                        <td>{{ $item->detail_obat }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+
+                                                            <a href="{{ route('editbarang', ['id_barang' => $item->id_barang]) }}"
+                                                                class="btn btn-success">Edit</a>
+                                                            <button class="btn btn-sm btn-danger" data-toggle="modal"
+                                                                data-target="#deleteModal-{{ $item->id_barang }}">Hapus</button>
 
                                                             <!-- Modal Konfirmasi Hapus -->
                                                             <div class="modal fade" id="deleteModal-{{ $item->id_barang }}"
