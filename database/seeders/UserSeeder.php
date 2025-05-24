@@ -15,8 +15,22 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            "username" => "Admin",
-            "password" => Hash::make("apotikrajawali")
+            "username" => "Admin", // atau "admin" sesuai preferensi
+            "password" => Hash::make("admin123"),
+            "role" => "admin" // Tambahkan role admin
+        ]);
+
+        // Opsional: Tambahkan pengguna staff untuk pengujian
+        User::create([
+            "username" => "Staff", // atau "staff"
+            "password" => Hash::make("staff123"), // Ganti dengan password yang aman
+            "role" => "staff"
+        ]);
+
+        User::create([
+            "username" => "Guest", // atau "staff"
+            "password" => Hash::make("guest123"), // Ganti dengan password yang aman
+            "role" => ""
         ]);
     }
 }

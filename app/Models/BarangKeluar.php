@@ -10,14 +10,20 @@ class BarangKeluar extends Model
     use HasFactory;
 
     protected $table = 'barang_keluar';
-    protected $primaryKey = 'id_barang'; // ← wajib kalau tidak pakai id default
+    // Primary key dari tabel barang_keluar adalah 'id' (auto-increment) sesuai migrasi
+    protected $primaryKey = 'id';
 
-    public $incrementing = false; // ← penting jika id_barang bukan auto increment
-    protected $keyType = 'string'; // ← sesuaikan jika id_barang pakai format seperti "BRG001"
-    public $timestamps = false; // ← jika tidak pakai created_at dan updated_at
+    // Karena 'id' adalah auto-incrementing integer, incrementing harus true
+    public $incrementing = true;
+    // Tipe key adalah integer (default untuk incrementing PK, bisa dihilangkan)
+    protected $keyType = 'int';
+
+    // Timestamps diatur false jika tidak ada kolom created_at & updated_at di migrasi barang_keluar
+    // Namun, migrasi Anda untuk barang_keluar memiliki $table->timestamps(); jadi ini harusnya true.
+    public $timestamps = true;
 
     protected $fillable = [
-        'id_barang',
+        'id_barang', // Ini adalah foreign key ke tabel inventory
         'nama_barang',
         'kategori',
         'satuan',
@@ -25,17 +31,19 @@ class BarangKeluar extends Model
         'tanggal_keluar',
         'harga_beli',
         'harga_jual',
-        'stok',
+        'stok', // Stok sisa di inventory setelah transaksi ini
         'jumlah_keluar',
-        'detail_obat',
-        'keterangan'
-
+        'detail_obat', // Status: terjual, exp, retur
+        'keterangan',
+        'keuntungan',
+        'kerugian'
     ];
 
-    // Menambahkan relasi ke model Inventory
+    // Relasi ke model Inventory
     public function inventory()
     {
+        // Foreign key di tabel barang_keluar adalah 'id_barang'
+        // Owner key di tabel inventory adalah 'id_barang' (primary key inventory)
         return $this->belongsTo(Inventory::class, 'id_barang', 'id_barang');
     }
 }
-
